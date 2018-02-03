@@ -6646,8 +6646,11 @@ DMatrix& DMatrix::operator() (const DMatrix& RowIndx )
 
 DMatrix& DMatrix::operator() (const DMatrix& RowIndx, long col )
 {
-
       DMatrix* ColIndx;
+
+      if (col > this->GetNoCols()) {
+            this->Resize(this->GetNoRows(), col);
+      }
 
       ColIndx  = DMatrix::GetTempPr(ChkTmpIndx(DMatrix::IncrementAuxIndx()));
       ColIndx->SetMType( 0 );
@@ -6695,6 +6698,10 @@ DMatrix& DMatrix::operator() (const char* end, const DMatrix& ColIndx )
 DMatrix& DMatrix::operator() (long row, const DMatrix& ColIndx )
 {
       DMatrix* RowIndx;
+
+      if (row > this->GetNoRows()) {
+            this->Resize(row, this->GetNoRows());
+      }
 
       RowIndx  = DMatrix::GetTempPr(ChkTmpIndx(DMatrix::IncrementAuxIndx()));
       RowIndx->SetMType( 0 );
