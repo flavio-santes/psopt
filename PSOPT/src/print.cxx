@@ -268,7 +268,7 @@ void print_psopt_summary(Prob& problem, Alg& algorithm, Sol& solution, Workspace
 		fprintf(outfile,"\nPhase %i maximum relative local error:\t\t%e", i+1, Max(solution.relative_errors[i]) );
 
 	    }
-            auxstr = "The problem solved!";
+            auxstr = "The problem has been solved!";
         }
         else {
            auxstr = "*** The problem FAILED! - see screen output";
@@ -439,7 +439,7 @@ void print_solution_summary(Prob& problem, Alg& algorithm, Sol& solution, Worksp
 		fprintf(outfile,"\nPhase %i maximum relative local error:\t\t%e", i+1, Max(solution.relative_errors[i]) );
 
 	    }
-            auxstr = "The problem solved!";
+            auxstr = "The problem has been solved!";
         }
         else {
            auxstr = "*** The problem FAILED! - see screen output";

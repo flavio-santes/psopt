@@ -592,7 +592,7 @@ int NLP_interface(
   status = app->OptimizeTNLP(mynlp);
 
   if (status == Solve_Succeeded) {
-    psopt_print(workspace,"\n\n*** The problem solved!\n");
+    psopt_print(workspace,"\n\n*** The problem has been solved!\n");
   }
   else {
     psopt_print(workspace,"\n\n*** The problem FAILED!\n");
