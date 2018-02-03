@@ -748,12 +748,15 @@ void print_constraint_summary(Prob& problem, Sol& solution, Workspace* workspace
 
     }
 
-
+#if 0
+/* This code is repeated in the following for loop
+ * We will see if we keep it here ...
+ */
     DMatrix& control_scaling = problem.phase[i].scale.controls;
     DMatrix& state_scaling   = problem.phase[i].scale.states;
     DMatrix& param_scaling   = problem.phase[i].scale.parameters;
     double time_scaling      =  problem.phase[i].scale.time;
-
+#endif
       fprintf(outfile,"\n**************************************UNSCALED NLP DECISION VARIABLES *************************************");
       fprintf(outfile,"\nJ\tLOWER\t\tX(J)\t\tUPPER\t\tSCALING\t\tDESCRIPTION");
 
