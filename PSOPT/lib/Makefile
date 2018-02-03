@@ -1,51 +1,75 @@
-#Usage:  make
-#add ../lib to LD_LIBRARY_PATH
+# PSOPT Lib Makefile
+# Copyright (C) 2018, Flavio Santes
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+#
 
-SHELL         = /bin/sh
+ifndef PSOPT_ROOT
+$(warning -)
+$(warning -----------------------------------------)
+$(warning Run from the psopt directory, example)
+$(warning cd ~/psopt-master && make)
+$(warning -----------------------------------------)
+$(error Bye)
+endif
 
-USERHOME      = /home/$(shell whoami)
+OBJS_DIR = ./obj
 
-F2CINC = $(F2CINCLUDE)
-F2CLIB = $(F2CLIBRARY)
+PSOPT_OBJS =					\
+	$(OBJS_DIR)/derivatives.o		\
+	$(OBJS_DIR)/evaluate.o			\
+	$(OBJS_DIR)/get_numbers.o		\
+	$(OBJS_DIR)/get_variables.o		\
+	$(OBJS_DIR)/integrate.o			\
+	$(OBJS_DIR)/interpolation.o		\
+	$(OBJS_DIR)/IPOPT_interface.o		\
+	$(OBJS_DIR)/mesh.o			\
+	$(OBJS_DIR)/NLP_bounds.o		\
+	$(OBJS_DIR)/NLP_constraints.o		\
+	$(OBJS_DIR)/NLP_guess.o			\
+	$(OBJS_DIR)/NLP_interface.o		\
+	$(OBJS_DIR)/NLP_objective.o		\
+	$(OBJS_DIR)/parameter_estimation.o	\
+	$(OBJS_DIR)/phases.o			\
+	$(OBJS_DIR)/plot.o			\
+	$(OBJS_DIR)/print.o			\
+	$(OBJS_DIR)/propagate.o			\
+	$(OBJS_DIR)/pseudospectral.o		\
+	$(OBJS_DIR)/psopt.o			\
+	$(OBJS_DIR)/scaling.o			\
+	$(OBJS_DIR)/setup.o			\
+	$(OBJS_DIR)/SNOPT_interface.o		\
+	$(OBJS_DIR)/solution.o			\
+	$(OBJS_DIR)/trajectories.o		\
+	$(OBJS_DIR)/user_functions.o		\
+	$(OBJS_DIR)/util.o			\
+	$(OBJS_DIR)/validate.o			\
+	$(OBJS_DIR)/workspace.o
 
-DMATRIXDIR=../../dmatrix
-CPPEXAMPLESDIR = $(SNOPTDIR)/cppexamples
-CXSPARSE=../../SuiteSparse/CXSparse
-LUSOL=../../lusol/csrc
+all: $(PSOPT_LIB)
 
-prefix = $(USERHOME)/Ipopt-3.12.3
-# Directory with header files
-IPOPTINCDIR = -I${prefix}/Ipopt/src/Interfaces -I${prefix}/Ipopt/src/Common -I${prefix}/Ipopt/src/LinAlg
-# Directory with libipopt.a
-IPOPTLIBDIR = ${exec_prefix}/lib
-exec_prefix = ${prefix}
+$(PSOPT_LIB): $(PSOPT_OBJS)
+	$(AR) crD $@ $^
 
-
-PSOPTSRCDIR = ../src
-
-
-CXX           = /usr/bin/g++
-CC            = /usr/bin/gcc
-CXXFLAGS      = -O0 -g -I$(USERHOME)/adolc_base/include  -I$(DMATRIXDIR)/include -I$(SNOPTDIR)/cppexamples -I$(PSOPTSRCDIR) -DLAPACK -DUNIX -DSPARSE_MATRIX -DUSE_IPOPT -I$(CXSPARSE)/Include -I$(CXSPARSE)/../SuiteSparse_config -I$(LUSOL) $(IPOPTINCDIR) -fomit-frame-pointer -pipe -DNDEBUG -pedantic-errors -Wimplicit -Wparentheses -Wreturn-type -Wcast-qual -Wall -Wpointer-arith -Wwrite-strings -Wconversion -fPIC -DHAVE_MALLOC
-
-CFLAGS        = -O0 -fPIC
-
-
-PSOPTLIB = libpsopt.a
-
-$(PSOPTLIB):  $(PSOPTLIB)($(PSOPTSRCDIR)/psopt.o $(PSOPTSRCDIR)/plot.o $(PSOPTSRCDIR)/util.o $(PSOPTSRCDIR)/pseudospectral.o $(PSOPTSRCDIR)/propagate.o $(PSOPTSRCDIR)/print.o $(PSOPTSRCDIR)/validate.o $(PSOPTSRCDIR)/scaling.o $(PSOPTSRCDIR)/interpolation.o $(PSOPTSRCDIR)/NLP_objective.o $(PSOPTSRCDIR)/NLP_constraints.o $(PSOPTSRCDIR)/mesh.o $(PSOPTSRCDIR)/evaluate.o $(PSOPTSRCDIR)/workspace.o $(PSOPTSRCDIR)/get_numbers.o $(PSOPTSRCDIR)/get_variables.o $(PSOPTSRCDIR)/setup.o $(PSOPTSRCDIR)/solution.o $(PSOPTSRCDIR)/NLP_guess.o $(PSOPTSRCDIR)/NLP_bounds.o $(PSOPTSRCDIR)/NLP_interface.o  $(PSOPTSRCDIR)/IPOPT_interface.o $(PSOPTSRCDIR)/derivatives.o $(PSOPTSRCDIR)/trajectories.o $(PSOPTSRCDIR)/SNOPT_interface.o $(PSOPTSRCDIR)/user_functions.o $(PSOPTSRCDIR)/integrate.o $(PSOPTSRCDIR)/phases.o $(PSOPTSRCDIR)/parameter_estimation.o)
-
+$(PSOPT_OBJS): $(OBJS_DIR)/%.o: $(PSOPTSRC_DIR)/%.cxx $(PSOPTSRC_DIR)/psopt.h
+	@mkdir -p $(OBJS_DIR)
+	$(CXX) -c $(CXXFLAGS) $< -o $@
 
 clean:
-	rm -f *.o
+	rm -rf $(OBJS_DIR)
+	rm -f $(PSOPT_LIB)
 
-distclean:
-	rm -f *.a
-
-
-$(PSOPTSRCDIR)/%.o : $(PSOPTSRCDIR)/%.cxx
-	$(CXX) -c $(CXXFLAGS) $< -o $@
-
-$(DMATRIXDIR)/src/%.o : $(DMATRIXDIR)/src/%.cxx
-	$(CXX) -c $(CXXFLAGS) $< -o $@
+.PHONY: clean
 

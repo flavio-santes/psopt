@@ -1,199 +1,147 @@
-SHELL         = /bin/sh
-USERHOME      = ~
-F2CINC = $(F2CINCLUDE)
-F2CLIB = $(F2CLIBRARY)
-DMATRIXDIR=./dmatrix
-CXSPARSE=./SuiteSparse/CXSparse
-LUSOL=./lusol/csrc
+# PSOPT Lib Makefile
+# Copyright (C) 2018, Flavio Santes
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
+#
 
-prefix = $(USERHOME)/Ipopt-3.12.3
-# Directory with header files
-IPOPTINCDIR = ${prefix}/include/coin
-# Directory with libipopt.a
-IPOPTLIBDIR = ${exec_prefix}/lib
-exec_prefix = ${prefix}
+export PSOPT_ROOT = $(CURDIR)
 
-PSOPTDIR    = ./PSOPT
+# Dependencies
+export CXSPARSE_DIR = $(PSOPT_ROOT)/SuiteSparse/CXSparse
+export LUSOL_DIR = $(PSOPT_ROOT)/lusol/csrc
+export DMATRIX_DIR= $(PSOPT_ROOT)/dmatrix
+export DMATRIX_LIB = $(DMATRIX_DIR)/lib/libdmatrix.a
 
-PSOPTSRCDIR = $(PSOPTDIR)/src
-EXAMPLESDIR = $(PSOPTDIR)/examples
-CXSPARSE_LIBS = $(CXSPARSE)/Lib/libcxsparse.a
-LUSOL_LIBS    = $(LUSOL)/liblusol.a
-SPARSE_LIBS   = $(CXSPARSE_LIBS) $(LUSOL_LIBS) -ldl
-ADOLC_LIBS    = -ladolc
-PSOPT_LIBS    = $(PSOPTDIR)/lib/libpsopt.a
-DMATRIX_LIBS  = $(DMATRIXDIR)/lib/libdmatrix.a
+IPOPT_DIR = $(HOME)/Ipopt-3.12.3
+IPOPT_LIB_DIR = $(IPOPT_DIR)/lib
 
+ADOLC_LIB =			\
+	/usr/lib/libadolc.a	\
+	/usr/lib/libColPack.a
+CXSPARSE_LIB = $(CXSPARSE_DIR)/Lib/libcxsparse.a
+LUSOL_LIB = $(LUSOL_DIR)/liblusol.a
 
-$(CXSPARSE_LIBS):
-# 	(cp UFconfig.h $(CXSPARSE)/Include;cd $(CXSPARSE)/Lib; $(MAKE))
-	(cd $(CXSPARSE);cd ..;$(MAKE))
+# PSOPT stuff
+export PSOPT_DIR = $(PSOPT_ROOT)/PSOPT
+export PSOPTSRC_DIR = $(PSOPT_DIR)/src
 
-$(LUSOL_LIBS):
-	(cp Makefile.lusol $(LUSOL)/Makefile; cd $(LUSOL); $(MAKE))
+EXAMPLES_DIR = $(PSOPT_DIR)/examples
 
-$(DMATRIX_LIBS): $(DMATRIXDIR)/src/dmatrixv.cxx $(DMATRIXDIR)/include/dmatrixv.h
-	(cd $(DMATRIXDIR)/lib; $(MAKE))
+export PSOPT_LIB = $(PSOPT_DIR)/lib/libpsopt.a
 
+PSOPT_LIBS =		\
+	$(PSOPT_LIB)	\
+	$(DMATRIX_LIB)
 
-dmatrix_examples:
-	(cd $(DMATRIXDIR)/examples; $(MAKE) all)
+# DMATRIX Dependencies
+DMATRIX_DEPS_LIBS =	\
+	$(LUSOL_LIB)	\
+	$(CXSPARSE_LIB)
 
-$(PSOPT_LIBS):
-	(cd $(PSOPTDIR)/lib; $(MAKE))
+# PSOPT Dependencies
+PSOPT_DEPS_LIBS =	\
+	$(ADOLC_LIB)	\
+	-lipopt		\
+	-lcoinmetis	\
+	-lcoinmumps
 
-bioreactor:
-	(cd $(EXAMPLESDIR)/$@; make $@)
+SYS_LIBS =		\
+	-llapack	\
+	-lf77blas	\
+	-lcblas		\
+	-lf2c		\
+	-ldl		\
+	-lm
 
-brac1:
-	(cd $(EXAMPLESDIR)/$@; make $@)
+DEFINES =					\
+	-DLAPACK -DUNIX -DSPARSE_MATRIX		\
+	-DUSE_IPOPT -DHAVE_MALLOC -DNDEBUG
 
+INCS =						\
+	-I$(DMATRIX_DIR)/include		\
+	-I$(PSOPTSRC_DIR)			\
+	-I$(CXSPARSE_DIR)/Include		\
+	-I$(CXSPARSE_DIR)/../SuiteSparse_config	\
+	-I$(LUSOL_DIR)				\
+	-I$(IPOPT_DIR)/include/coin		\
+	-I$(IPOPT_DIR)/include/coin/ThirdParty	\
+	-I/usr/include/adolc
 
-shutt:
-	(cd $(EXAMPLESDIR)/$@; make $@)
+FLAGS = -O0 -g -fomit-frame-pointer -fPIC
 
+WARNS =			\
+	-Wparentheses	\
+	-Wreturn-type	\
+	-Wcast-qual	\
+	-Wpointer-arith	\
+	-Wwrite-strings	\
+	-Wconversion	\
+	-Wall
 
-manutec:
-	(cd $(EXAMPLESDIR)/$@; make $@)
+export CXXFLAGS += $(DEFINES) $(INCS) $(FLAGS) $(WARNS)
 
-missile:
-	(cd $(EXAMPLESDIR)/$@; make $@)
+export DMATRIX_LDFLAGS =
 
-moon:
-	(cd $(EXAMPLESDIR)/$@; make $@)
+export DMATRIX_LDLIBS =			\
+	$(DMATRIX_DEPS_LIBS)		\
+	$(SYS_LIBS)
 
-stc1:
-	(cd $(EXAMPLESDIR)/$@; make $@)
+export PSOPT_LDFLAGS += 		\
+	-L$(IPOPT_LIB_DIR)		\
+	-Wl,-rpath=$(IPOPT_LIB_DIR)
 
+export PSOPT_LDLIBS =			\
+	$(PSOPT_LIBS)			\
+	$(DMATRIX_DEPS_LIBS)		\
+	$(PSOPT_DEPS_LIBS)		\
+	$(SYS_LIBS)
 
-brymr:
-	(cd $(EXAMPLESDIR)/$@; make $@)
+all: lib examples test
 
-twoburn:
-	(cd $(EXAMPLESDIR)/$@; make $@)
+lib: $(DMATRIX_LIB)
+	cd $(PSOPT_DIR)/lib && $(MAKE)
 
-twolink:
-	(cd $(EXAMPLESDIR)/$@; make $@)
+examples: lib
+	cd $(EXAMPLES_DIR) && $(MAKE)
 
-twophsc:
-	(cd $(EXAMPLESDIR)/$@; make $@)
+test:
+	cd $(EXAMPLES_DIR)/launch && ./launch
 
-twophro:
-	(cd $(EXAMPLESDIR)/$@; make $@)
+$(LUSOL_LIB):
+	cp Makefile.lusol $(LUSOL_DIR)/Makefile
+	cd $(LUSOL_DIR) && $(MAKE)
 
-hyper:
-	(cd $(EXAMPLESDIR)/$@; make $@)
+$(CXSPARSE_LIB):
+	cd $(CXSPARSE_DIR) && $(MAKE)
 
+$(DMATRIX_LIB): $(LUSOL_LIB) $(CXSPARSE_LIB)
+	cd $(DMATRIX_DIR)/lib && $(MAKE)
 
-launch:
-	(cd $(EXAMPLESDIR)/$@; make $@)
-
-lambert:
-	(cd $(EXAMPLESDIR)/$@; make $@)
-
-bryden:
-	(cd $(EXAMPLESDIR)/$@; make $@)
-
-delay1:
-	(cd $(EXAMPLESDIR)/$@; make $@)
-
-goddard:
-	(cd $(EXAMPLESDIR)/$@; make $@)
-
-steps:
-	(cd $(EXAMPLESDIR)/$@; make $@)
-
-sing5:
-	(cd $(EXAMPLESDIR)/$@; make $@)
-
-climb:
-	(cd $(EXAMPLESDIR)/$@; make $@)
-
-cracking:
-	(cd $(EXAMPLESDIR)/$@; make $@)
-
-isop:
-	(cd $(EXAMPLESDIR)/$@; make $@)
-
-catmix:
-	(cd $(EXAMPLESDIR)/$@; make $@)
-
-chain:
-	(cd $(EXAMPLESDIR)/$@; make $@)
-
-obstacle:
-	(cd $(EXAMPLESDIR)/$@; make $@)
-
-crane:
-	(cd $(EXAMPLESDIR)/$@; make $@)
-
-ipc:
-	(cd $(EXAMPLESDIR)/$@; make $@)
-
-alpine:
-	(cd $(EXAMPLESDIR)/$@; make $@)
-
-lts:
-	(cd $(EXAMPLESDIR)/$@; make $@)
-
-user:
-	(cd $(EXAMPLESDIR)/$@; make $@)
-
-coulomb:
-	(cd $(EXAMPLESDIR)/$@; make $@)
-
-lowthr:
-	(cd $(EXAMPLESDIR)/$@; make $@)
-
-heat:
-	(cd $(EXAMPLESDIR)/$@; make $@)
-
-zpm:
-	(cd $(EXAMPLESDIR)/$@; make $@)
-
-glider:
-	(cd $(EXAMPLESDIR)/$@; make $@)
-
-notorious:
-	(cd $(EXAMPLESDIR)/$@; make $@)
-
-reorientation:
-	(cd $(EXAMPLESDIR)/$@; make $@)
-
-mpec:
-	(cd $(EXAMPLESDIR)/$@; make $@)
-
-dae_i3:
-	(cd $(EXAMPLESDIR)/$@; make $@)
-
-breakwell:
-	(cd $(EXAMPLESDIR)/$@; make $@)
-
-rayleigh:
-	(cd $(EXAMPLESDIR)/$@; make $@)
-
-test: launch
-	(cd $(EXAMPLESDIR)/launch; ./launch)
-
-
-all: $(CXSPARSE_LIBS) $(DMATRIX_LIBS) $(LUSOL_LIBS) $(PSOPT_LIBS) dmatrix_examples bioreactor brac1 shutt manutec missile moon stc1 sing5 steps brymr twoburn twolink twophsc twophro hyper launch lambert bryden delay1 goddard sing5 climb cracking isop catmix chain obstacle crane ipc alpine lts user  coulomb lowthr heat zpm glider notorious reorientation mpec dae_i3 breakwell rayleigh test
-
+dmatrix_examples: $(DMATRIX_LIB)
+	cd $(DMATRIX_DIR)/examples && $(MAKE) all
 
 clean:
+	cd $(DMATRIX_DIR)/lib && $(MAKE) clean
+	cd $(DMATRIX_DIR)/examples && $(MAKE) clean
+	cd $(PSOPT_DIR)/lib && $(MAKE) clean
+	cd $(EXAMPLES_DIR) && $(MAKE) clean
 
-	(cd $(DMATRIXDIR)/lib; $(MAKE) clean)
-	(cd $(CXSPARSE)/Lib; $(MAKE) clean)
-	(cd $(LUSOL); $(MAKE) clean)
-	(cd $(DMATRIXDIR)/examples; $(MAKE) clean)
-	(cd $(PSOPTDIR)/lib; $(MAKE) clean)
+distclean: clean
+	cd $(CXSPARSE_DIR)/Lib && $(MAKE) clean
+	cd $(LUSOL_DIR) && $(MAKE) clean
 
-
-distclean:
-
-	(cd $(DMATRIXDIR)/lib; $(MAKE) distclean)
-	(cd $(CXSPARSE)/Lib; $(MAKE) distclean)
-	(cd $(LUSOL); $(MAKE) clean)
-	(cd $(DMATRIXDIR)/examples; $(MAKE) distclean)
-	(cd $(PSOPTDIR)/lib; $(MAKE) distclean)
+.PHONY: all lib examples test dmatrix_examples clean distclean
 
 

@@ -1,49 +1,39 @@
-#Usage:  make
-#add ../lib to LD_LIBRARY_PATH
+# PSOPT Lib Makefile
+# Copyright (C) 2018, Flavio Santes
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+#
 
-SHELL         = /bin/sh
+ifndef PSOPT_ROOT
+$(warning -)
+$(warning -----------------------------------------)
+$(warning Run from the psopt directory, example)
+$(warning cd ~/psopt-master && make)
+$(warning -----------------------------------------)
+$(error Bye)
+endif
 
+all: $(DMATRIX_LIB)
 
+$(DMATRIX_LIB): $(DMATRIX_DIR)/src/dmatrixv.o
+	$(AR) crD $@ $^
 
-F2CINC = $(F2CINCLUDE)
-F2CLIB = $(F2CLIBRARY)
-
-DMATRIXDIR=../../dmatrix
-CPPEXAMPLESDIR = $(SNOPTDIR)/cppexamples
-CXSPARSE=../../SuiteSparse/CXSparse
-LUSOL=../../lusol/csrc
-
-
-# Directory with header files
-IPOPTINCDIR = ${prefix}/include/coin
-# Directory with libipopt.a
-IPOPTLIBDIR = ${exec_prefix}/lib
-exec_prefix = ${prefix}
-
-
-PSOPTSRCDIR = ../src
-
-
-CXX           = /usr/bin/g++
-CC            = /usr/bin/gcc
-CXXFLAGS      = -O0 -g -Wno-long-long -I$(SNOPTDIR)/cppsrc -I$(DMATRIXDIR)/include -I$(SNOPTDIR)/cppexamples -I$(PSOPTSRCDIR) -DLAPACK -DUNIX -DSPARSE_MATRIX -DUSE_SNOPT -DUSE_IPOPT -I$(CXSPARSE)/Include -I$(LUSOL) -I$(CXSPARSE)/../SuiteSparse_config -I$(IPOPTINCDIR) -fomit-frame-pointer -pipe -DNDEBUG -pedantic-errors -Wimplicit -Wparentheses -Wreturn-type -Wcast-qual -Wall -Wpointer-arith -Wwrite-strings -Wconversion -fPIC -DHAVE_MALLOC
-
-CFLAGS        = -O0 -fPIC
-
-
-DMATRIXLIB = libdmatrix.a
-
-$(DMATRIXLIB):  $(DMATRIXLIB)($(DMATRIXDIR)/src/dmatrixv.o)
-
-
-$(DMATRIXDIR)/src/%.o : $(DMATRIXDIR)/src/%.cxx $(DMATRIXDIR)/include/%.h
+$(DMATRIX_DIR)/src/%.o: $(DMATRIX_DIR)/src/%.cxx $(DMATRIX_DIR)/include/%.h
 	$(CXX) -c $(CXXFLAGS) $< -o $@
 
-
 clean:
+	rm -f $(DMATRIX_DIR)/src/*.o
+	rm -f $(DMATRIX_LIB)
 
-	(rm -f *.o;rm -f ../src/*.o)
-
-distclean:
-
-	(rm -f *.a)

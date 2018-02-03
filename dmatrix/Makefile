@@ -13,31 +13,29 @@
 #
 # You should have received a copy of the GNU Lesser General Public
 # License along with this library; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
 ifndef PSOPT_ROOT
 $(warning -)
 $(warning -----------------------------------------)
 $(warning Run from the psopt directory, example)
-$(warning cd ~/psopt-master && make dmatrix_examples)
+$(warning cd ~/psopt-master && make)
 $(warning -----------------------------------------)
 $(error Bye)
 endif
 
-EXAMPLES =	\
-	ricc	\
-	colon	\
-	expm	\
-	rand	\
-	sparse
+all: lib
 
-all: $(EXAMPLES)
+lib:
+	cd lib && $(MAKE)
 
-$(EXAMPLES): %: %.cxx $(DMATRIX_LIB)
-	$(CXX) $(CXXFLAGS) -o $@ $< $(DMATRIX_LDFLAGS) $(DMATRIX_LDLIBS)
+examples: lib
+	cd examples && $(MAKE)
 
 clean:
-	rm -f $(EXAMPLES)
+	cd lib && $(MAKE) clean
+	cd examples && $(MAKE) clean
 
+.PHONY: all lib examples clean
 
