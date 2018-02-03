@@ -73,7 +73,7 @@ string contact_notice=  "\n * The author can be contacted at his email address: 
 
   get_local_time( solution.start_date_and_time );
 
-  Workspace works;
+  Workspace works = { 0 };
 
   Workspace* workspace = &works;
 

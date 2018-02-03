@@ -152,16 +152,34 @@ class ADMatrix {
 };
 
 
-struct dual_str {
+class dual_str {
+public:
   DMatrix* Hamiltonian;
   DMatrix* costates;
   DMatrix* path;
   DMatrix* events;
   DMatrix* linkages;
+
+  dual_str()
+  {
+    Hamiltonian = NULL;
+    costates = NULL;
+    path = NULL;
+    events = NULL;
+    linkages = NULL;
+  }
+
+  ~dual_str()
+  {
+    if (Hamiltonian) delete [] Hamiltonian;
+    if (costates) delete [] costates;
+    if (path) delete [] path;
+    if (events) delete [] events;
+    if (linkages) delete linkages;
+  }
 };
 
-
-typedef struct dual_str Dual;
+typedef class dual_str Dual;
 
 
 typedef struct {
@@ -359,10 +377,22 @@ struct prob_bounds_str {
 
 typedef struct prob_bounds_str ProbBounds;
 
-typedef struct work_str Workspace;
+typedef class work_str Workspace;
 
 
-struct prob_str {
+class prob_str {
+public:
+   prob_str()
+   {
+       phase = NULL;
+   }
+   ~prob_str()
+   {
+       if (phase)
+       {
+         delete [] phase;
+       }
+   }
 
    int nphases;
 
@@ -400,12 +430,39 @@ struct prob_str {
 
 };
 
-typedef struct prob_str Prob;
+typedef class prob_str Prob;
 
 
 
 
-struct sol_str {
+class sol_str {
+public:
+   sol_str()
+   {
+      states = NULL;
+      controls = NULL;
+      nodes = NULL;
+      parameters = NULL;
+      relative_errors = NULL;
+      integrand_cost = NULL;
+      endpoint_cost = NULL;
+      integrated_cost = NULL;
+      xad = NULL;
+      mesh_stats = NULL;
+   }
+   ~sol_str()
+   {
+      if (this->states) delete [] this->states;
+      if (this->controls) delete [] this->controls;
+      if (this->nodes) delete [] this->nodes;
+      if (this->integrand_cost) delete [] this->integrand_cost;
+      if (this->parameters) delete [] this->parameters;
+      if (this->relative_errors) delete [] this->relative_errors;
+      if (this->endpoint_cost) delete [] this->endpoint_cost;
+      if (this->integrated_cost) delete [] this->integrated_cost;
+      if (this->mesh_stats) delete [] this->mesh_stats;
+   }
+
    DMatrix *states;
    DMatrix *controls;
    DMatrix *nodes;
@@ -439,7 +496,7 @@ struct sol_str {
    double   get_cost() { return cost; }
 };
 
-typedef struct sol_str Sol;
+typedef class sol_str Sol;
 
 
 
@@ -480,7 +537,10 @@ typedef struct {
 
 } IGroup;
 
-struct work_str {
+class work_str {
+public:
+   ~work_str();
+   long unsigned int nphases;
 
    Sol*      solution;
    Prob*     problem;

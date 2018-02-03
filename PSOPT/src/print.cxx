@@ -851,6 +851,9 @@ void print_constraint_summary(Prob& problem, Sol& solution, Workspace* workspace
 
     }
 
+    delete [] g_l;
+    delete [] g_u;
+
 }
 
 
