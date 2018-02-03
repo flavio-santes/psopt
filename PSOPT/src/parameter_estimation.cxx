@@ -194,7 +194,7 @@ void auto_split_observations(Prob& problem, DMatrix& observation_nodes, DMatrix&
 
 
 
-void load_parameter_estimation_data(Prob& problem, int iphase, char* filename)
+void load_parameter_estimation_data(Prob& problem, int iphase, const char* filename)
 {
     // This function reads data for parameter estimation problems for a given phase "iphase" from a file
     // whose columns contain the following information:

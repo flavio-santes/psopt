@@ -30,7 +30,7 @@ Author:    Professor Victor M. Becerra
 
 #include "psopt.h"
 
-void psopt_print(Workspace* workspace, char* msg)
+void psopt_print(Workspace* workspace, const char* msg)
 {
     if (workspace->algorithm->print_level) {
          fprintf(stderr,"%s", msg);

@@ -954,30 +954,30 @@ void auto_link(adouble* linkages, int* index, adouble* xad, int iphase_a, int ip
 void auto_link_2(adouble* linkages, int* index, adouble* xad, int iphase_a, int iphase_b, Workspace* workspace);
 
 void plot(DMatrix& x, DMatrix& y,const string& title,
-          char* xlabel, char* ylabel, char* legend=NULL, char* terminal=NULL, char* output=NULL);
+          const char* xlabel, const char* ylabel, const char* legend=NULL, const char* terminal=NULL, const char* output=NULL);
 
 void plot(DMatrix& x1, DMatrix& y1, DMatrix& x2, DMatrix& y2, const string& title,
-          char* xlabel, char* ylabel, char* legend=NULL, char* terminal=NULL, char* output=NULL);
+          const char* xlabel, const char* ylabel, const char* legend=NULL, const char* terminal=NULL, const char* output=NULL);
 
 void plot(DMatrix& x1, DMatrix& y1, DMatrix& x2, DMatrix& y2, DMatrix& x3, DMatrix& y3,
-          const string& title, char* xlabel, char* ylabel, char* legend=NULL, char* terminal=NULL, char* output=NULL);
+          const string& title, const char* xlabel, const char* ylabel, const char* legend=NULL, const char* terminal=NULL, const char* output=NULL);
 
-void multiplot(DMatrix& x, DMatrix& y, const string& title, char* xlabel, char* ylabel, char* legend, int nrows=0, int ncols=0,  char* terminal=NULL, char* output=NULL ) ;
+void multiplot(DMatrix& x, DMatrix& y, const string& title, const char* xlabel, const char* ylabel, const char* legend, int nrows=0, int ncols=0, const char* terminal=NULL, const char* output=NULL ) ;
 
-void spplot(DMatrix& x1a, DMatrix& y1a, DMatrix& x2a, DMatrix& y2a, const string& title, char* xlabel, char* ylabel, char* legend, char* terminal=NULL, char* output=NULL);
+void spplot(DMatrix& x1a, DMatrix& y1a, DMatrix& x2a, DMatrix& y2a, const string& title, const char* xlabel, const char* ylabel, const char* legend, const char* terminal=NULL, const char* output=NULL);
 
 void polar(DMatrix& theta, DMatrix& r, const string& title,
-           char* legend=NULL, char* terminal=NULL, char* output=NULL);
+           const char* legend=NULL, const char* terminal=NULL, const char* output=NULL);
 
 void polar(DMatrix& theta, DMatrix& r, DMatrix& theta2, DMatrix& r2, const string& title,
-            char* legend=NULL, char* terminal=NULL, char* output=NULL);
+            const char* legend=NULL, const char* terminal=NULL, const char* output=NULL);
 
 void polar(DMatrix& theta, DMatrix& r, DMatrix& theta2, DMatrix& r2,  DMatrix& theta3, DMatrix& r3, const string& title,
-            char* legend=NULL, char* terminal=NULL, char* output=NULL);
+           const char* legend=NULL, const char* terminal=NULL, const char* output=NULL);
 
-void surf(DMatrix& x, DMatrix& y, DMatrix& z, const string& title, char* xlabel, char* ylabel, char* zlabel, char* terminal=NULL, char* output=NULL, char* view=NULL);
+void surf(DMatrix& x, DMatrix& y, DMatrix& z, const string& title, const char* xlabel, const char* ylabel, const char* zlabel, const char* terminal=NULL, const char* output=NULL, const char* view=NULL);
 
-void plot3(DMatrix& x, DMatrix& y, DMatrix& z, const string& title, char* xlabel, char* ylabel, char* zlabel, char* terminal=NULL, char* output=NULL, char* view=NULL);
+void plot3(DMatrix& x, DMatrix& y, DMatrix& z, const string& title, const char* xlabel, const char* ylabel, const char* zlabel, const char* terminal=NULL, const char* output=NULL, const char* view=NULL);
 
 void psopt_error_message(const char *error_text);
 
@@ -997,7 +997,7 @@ void psopt_main(Sol& solution, Prob& problem, Alg& algorithm);
 
 void clip_vector_given_bounds(DMatrix& xp, DMatrix& xlb, DMatrix& xub);
 
-void psopt_print(Workspace* workspace, char* msg);
+void psopt_print(Workspace* workspace, const char* msg);
 
 int auto_link_count(Prob& problem, int nstates);
 
@@ -1059,7 +1059,7 @@ void transpose_ad(adouble* Apr, int na, int ma,  adouble* Atpr);
 
 void resample_trajectory(DMatrix& Y, DMatrix& X, DMatrix& Ydata, DMatrix& Xdata);
 
-void load_parameter_estimation_data(Prob& problem, int iphase, char* filename);
+void load_parameter_estimation_data(Prob& problem, int iphase, const char* filename);
 
 bool compute_parameter_statistics(DMatrix& Qp, DMatrix& p, DMatrix& plow, DMatrix& phigh, DMatrix& r, Workspace* workspace);
 
