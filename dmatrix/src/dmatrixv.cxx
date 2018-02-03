@@ -525,6 +525,11 @@ void DMatrix::DeAllocateAuxArr( void )
 
     int i;
 
+    if (DMatrix::seed) {
+        mxFree(DMatrix::seed);
+        DMatrix::seed = NULL;
+    }
+
     for ( i=0; i< GetNoAuxArr(); i++ )
     {
 
