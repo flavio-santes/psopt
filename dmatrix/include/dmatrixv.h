@@ -687,6 +687,7 @@ public:
   */
    DMatrix& mpow(int p);
 
+   void initVars();
 
    // Constructors
 

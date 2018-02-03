@@ -237,23 +237,25 @@ InitializeDMatrixClass Dummy;
 
 #define FREE_ARG char*
 
-
+void DMatrix::initVars()
+{
+	a = NULL;
+	n = 0;
+	m = 0;
+	asize = 0;
+	atype = 0;
+	mtype = 0;
+	auxFlag = 0;
+	allocated = 0;
+	DMatrix* mt = NULL;
+	rowIndx = NULL;
+	colIndx = NULL;
+}
 
 DMatrix::DMatrix(void)
 // Default constructor
 {
-
-    n = 0;
-
-    m = 0;
-
-    a = NULL;
-
-    asize = 0;
-
-    atype = 0;
-
-	auxFlag=0;
+	initVars();
 
     SetReferencedDMatrixPointer( NULL );
     SetRowIndexPointer(NULL);
@@ -268,6 +270,7 @@ DMatrix::DMatrix(void)
 DMatrix::DMatrix(long Initn, long Initm)
 //  Matrix constructor using memory allocation
 {
+  initVars();
 
   n=Initn;
 
@@ -291,10 +294,6 @@ DMatrix::DMatrix(long Initn, long Initm)
 
   }
 
-  atype = 0;
-
-  auxFlag = 0;
-
   SetReferencedDMatrixPointer( NULL );
   SetRowIndexPointer(NULL);
   SetColIndexPointer(NULL);
@@ -305,6 +304,7 @@ DMatrix::DMatrix(long Initn, long Initm)
 DMatrix::DMatrix( long vDim, double* v, long Initn, long Initm )
 // Matrix constructor using pre-allocated array or pointer
 {
+   initVars();
 
    n = Initn;
 
@@ -352,6 +352,8 @@ DMatrix::DMatrix( long Initn)
                      DMatrix::DMatrix(long)");
   }
 
+  initVars();
+
   n=Initn;
 
   m=1;
@@ -383,6 +385,8 @@ DMatrix::DMatrix(long rows,long columns,double a11,...)
 // Matrix constructor with assigment
 
    long i,j;
+
+   initVars();
 
    n = rows;
 
@@ -431,6 +435,7 @@ DMatrix::DMatrix(long rows,long columns,double a11,...)
 DMatrix::DMatrix( const DMatrix& A)
 // copy constructor
 {
+  initVars();
 
   n=A.n;
 
