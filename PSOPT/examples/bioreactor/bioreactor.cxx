@@ -264,7 +264,7 @@ int main(void)
 ////////////////////////////////////////////////////////////////////////////
 
 
-    algorithm.nlp_iter_max                = 1000;
+    algorithm.nlp_iter_max                = 5000;
     algorithm.nlp_tolerance               = 1.e-5;
     algorithm.nlp_method                  = "IPOPT";
     algorithm.scaling                     = "automatic";
