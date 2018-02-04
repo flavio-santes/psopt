@@ -565,7 +565,7 @@ void print_solution_summary(Prob& problem, Alg& algorithm, Sol& solution, Worksp
         }
       }
 
-#ifdef UNIX
+#if 0
      fprintf(outfile,"\n\n>>>>> Rank of parameter covariance matrix: %i ", rank(Cp));
 #endif
       fprintf(outfile,"\n\n>>> 95 percent statistical confidence limits on estimated parameters ");
